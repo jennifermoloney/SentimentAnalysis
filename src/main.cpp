@@ -3,6 +3,7 @@
 //
 #include <QApplication>
 #include "UI.h"
+#include "hashmap.h"
 
 int main(int argc, char *argv[])
 {
@@ -10,4 +11,13 @@ int main(int argc, char *argv[])
     MainWindow window;
     window.show();
     return app.exec();
+
+
+    HM_separateChaining first_map;
+
+	//ParseDataFile("file_datita/training.1600000.processed.noemoticon.csv");
+
+    // just testing with this "datita.csv" file since it is WAY smaller than the actual dataset
+    // feel free to add a new .csv file into \cmake-build-debug\fileData folder to test a different input
+	ParseDataFile("file_datita/datita.csv", first_map);
 }

@@ -21,6 +21,8 @@ set(SOURCES
         src/main.cpp
         src/UI.cpp
         src/UI.h
+        src/hashmap.cpp
+        src/hashmap.h
 )
 
 # Create the executable using the project's name ("SentimentAnalysis")
