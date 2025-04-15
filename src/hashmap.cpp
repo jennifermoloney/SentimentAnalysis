@@ -1,9 +1,10 @@
 //
 // Created by diego on 4/14/2025.
 //
-
-#include "hashmap.h"
 #include <iostream>
+#include "hashmap.h"
+//#include <string>
+
 
 unsigned long long int HashFunction_one(const std::string& word) {
 	// do the calculations
