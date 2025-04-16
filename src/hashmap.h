@@ -93,4 +93,5 @@ public:
 void ProcessTweet_one(const string& tweet_, HM_separateChaining& a_map, const int score);
 void ParseDataFile(const string& fileName, HM_separateChaining& a_map);
 void ProcessInput(const string& tweet_, HM_separateChaining& a_map);
+float ProcessInputReturn(const string &tweet_, HM_separateChaining &a_map);
 #endif // HASHMAP_H

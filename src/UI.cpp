@@ -85,12 +85,9 @@ MainWindow::MainWindow(QWidget *parent)
     sentimentLabelsLayout->addWidget(sentimentExplanationLabel);
 
     mainLayout->addLayout(sentimentLabelsLayout);
-
-
     mainLayout->addStretch();
 
     QHBoxLayout *bottomLayout = new QHBoxLayout();
-
 
     QVBoxLayout *leftColumn = new QVBoxLayout();
     openAddressingButton = new QPushButton("Open Addressing", this);
@@ -144,32 +141,46 @@ MainWindow::MainWindow(QWidget *parent)
 
     currentAlgorithm = "Open Addressing";
 
+    //change when we add our real data set
+    ParseDataFile("../src/datita.csv", m_separateMap);
+
     setMinimumSize(500, 500);
+}
+
+float MainWindow::computeScore(const QString &text) {
+    std::string tweet = text.toStdString();
+    return ProcessInputReturn(tweet, m_separateMap);
 }
 
 void MainWindow::analyzeText()
 {
     QString userText = inputEdit->text();
+    float rawScore = computeScore(userText);
+    int displayScore = static_cast<int>(std::round(rawScore));
 
-    int sentimentScore = 0;
-    std::string sentimentExplantion = " ";
+    QString explanation;
+    switch (displayScore) {
+        case 0: explanation = "very negative"; break;
+        case 1: explanation = "negative";      break;
+        case 2: explanation = "neutral";       break;
+        case 3: explanation = "positive";      break;
+        case 4: explanation = "very positive"; break;
+        default: explanation = "unknown";      break;
+    }
 
-    sentimentResultLabel->setText(QString("The sentiment of your message is: %1").arg(sentimentScore));
+    sentimentResultLabel->setText(QString("The sentiment of your message is: %1").arg(rawScore));
     sentimentResultLabel->setVisible(true);
 
-    sentimentExplanationLabel->setText(QString("Your text is %1").arg(QString::fromStdString(sentimentExplantion)));
+    sentimentExplanationLabel->setText(QString("Your text is %1").arg(explanation));
     sentimentExplanationLabel->setVisible(true);
 
     if (currentAlgorithm == "Open Addressing")
-    {
         metricsLabel->setText("Metrics!");
-    }
-    else if (currentAlgorithm == "Separate Chaining")
-    {
+    else
         metricsLabel->setText("More Metrics!");
-    }
     metricsGroup->setVisible(true);
 }
+
 
 void MainWindow::selectOpenAddressing()
 {

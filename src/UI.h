@@ -8,6 +8,7 @@
 
 #include <QMainWindow>
 #include <QString>
+#include "hashmap.h"
 
 class QLabel;
 class QLineEdit;
@@ -35,13 +36,15 @@ private:
     QPushButton *openAddressingButton;
     QPushButton *separateChainingButton;
 
-    QLabel *sentimentResultLabel; // Hidden initially, appears after Go! is pressed.
+    QLabel *sentimentResultLabel;
     QLabel *sentimentExplanationLabel;
-    QGroupBox *metricsGroup;         // Hidden initially.
-    QLabel *metricsLabel;            // Contents of the metrics group.
+    QGroupBox *metricsGroup;
+    QLabel *metricsLabel;
 
-    // Track which algorithm is selected.
     QString currentAlgorithm;
+    HM_separateChaining m_separateMap;
+    HM_linearProbing  m_openMap;
+    float computeScore(const QString &text);
 };
 
 

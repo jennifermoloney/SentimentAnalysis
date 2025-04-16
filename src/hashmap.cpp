@@ -85,3 +85,22 @@ void ProcessInput(const string &tweet_, HM_separateChaining &a_map) {
     std::cout << "The score of your tweet is: " << final_result << std::endl;
 }
 
+// Same function as above- just returns a float instead of being void
+// Do we need both?
+float ProcessInputReturn(const string &tweet_, HM_separateChaining &a_map) {
+    int inputTweetScore = 0;
+    int valid_word_counter = 0;
+    std::istringstream token(tweet_);
+    std::string single_word;
+    while (getline(token, single_word, ' ')) {
+        int temp = a_map.search(single_word);
+        if (temp != -1) {
+            inputTweetScore += temp;
+            ++valid_word_counter;
+        }
+    }
+
+    float final_result = (float) inputTweetScore / (float)valid_word_counter;
+    return final_result;
+}
+
