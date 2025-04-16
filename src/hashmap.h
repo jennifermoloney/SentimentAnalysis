@@ -31,7 +31,7 @@ public:
         entries_counter++;
     }
 
-    void search(const string& word) {
+    int search(const string& word) {
         unsigned long long int hash_code = HashFunction_one(word);
         bool found = false;
         for (size_t i = 0; i < a[hash_code].size(); i++) {
@@ -39,12 +39,13 @@ public:
                 cout << "The score of the word " << a[hash_code][i].first
                           << " is: " << a[hash_code][i].second << endl;
                 found = true;
-                break;
+                return a[hash_code][i].second;
             }
         }
-        if (!found) {
-            cout << "The word: " << word << " is not present in the map" << endl;
-        }
+        //if (!found) {
+        cout << "The word: " << word << " is not present in the map" << endl;
+        return -1;
+        //}
     }
 };
 
@@ -91,5 +92,5 @@ public:
 
 void ProcessTweet_one(const string& tweet_, HM_separateChaining& a_map, const int score);
 void ParseDataFile(const string& fileName, HM_separateChaining& a_map);
-
+void ProcessInput(const string& tweet_, HM_separateChaining& a_map);
 #endif // HASHMAP_H
