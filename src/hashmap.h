@@ -94,4 +94,11 @@ void ProcessTweet_one(const string& tweet_, HM_separateChaining& a_map, const in
 void ParseDataFile(const string& fileName, HM_separateChaining& a_map);
 void ProcessInput(const string& tweet_, HM_separateChaining& a_map);
 float ProcessInputReturn(const string &tweet_, HM_separateChaining &a_map);
+
+void ParseMovieDataFile(const string& fileName, HM_separateChaining &a_map);
+void Process_MovieTitle(const string& tweet_, HM_separateChaining& a_map, const int movieID);
+
+
+
+
 #endif // HASHMAP_H

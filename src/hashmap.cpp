@@ -44,9 +44,9 @@ void ParseDataFile(const std::string& fileName, HM_separateChaining& a_map) {
     std::string tweet;
 
     if (dataFile.is_open()) {
-        std::cout << "Data file open!" << std::endl;
+        std::cout << fileName << "Data file open!" << std::endl;
     } else {
-        std::cout << "Data file FAILED to open!" << std::endl;
+        std::cout << fileName << " FAILED to open!" << std::endl;
     }
     int counter = 0;
     while (std::getline(dataFile, line) && counter != 100000) {
@@ -65,6 +65,69 @@ void ParseDataFile(const std::string& fileName, HM_separateChaining& a_map) {
         getline(token, tweet, '"');
         ++counter;
         ProcessTweet_one(tweet, a_map, std::stoi(score));
+    }
+}
+
+
+void Process_MovieTitle(const string& title_, HM_separateChaining& a_map, const int movieID) {
+    std::string actual_title;
+    std::istringstream token(title_);
+    // while (getline(message_string, word, ' ')) {
+    //     unsigned long long int hash_code = HashFunction_one(word);
+    //     a_map.insert(hash_code, word, score);
+    // }
+    getline(token, actual_title, '(');
+    actual_title.erase(actual_title.size()-1);
+    std::ifstream rating_dataFile("fileData/ratings.csv");
+    if (rating_dataFile.is_open()) {
+        std::cout << "Data file open!" << std::endl;
+    } else {
+        std::cout << "Data file FAILED to open!" << std::endl;
+    }
+
+    std::string actual_rating;
+    std::string token_line;
+    std::string token_user_id;
+    std::string token_movie_id;
+
+
+    while (std::getline(rating_dataFile, token_line)) {
+        getline(token, token_user_id, ',');
+        getline(token, token_movie_id, ',');
+        getline(token, actual_rating, ',');
+        if (std::stoi(token_movie_id) == movieID) {
+            std::cout << "your movie has a rating of: " << actual_rating << std::endl;
+            break;
+        }
+    }
+    unsigned long long int hash_code = HashFunction_one(title_);
+    a_map.insert(hash_code, title_, std::stoi(actual_rating));
+}
+
+
+void ParseMovieDataFile(const std::string& fileName, HM_separateChaining& a_map) {
+    std::ifstream dataFile(fileName);
+    std::string line;
+
+    std::string movieID;
+    std::string title;
+    std::string genres;
+
+    if (dataFile.is_open()) {
+        std::cout << fileName << " file open!" << std::endl;
+    } else {
+        std::cout <<  fileName << " FAILED to open!" << std::endl;
+    }
+    int counter = 0;
+    std::getline(dataFile, line); // to skip the first line of the file
+
+    while (std::getline(dataFile, line) && counter != 100000) {
+        std::istringstream token(line);
+        getline(token, movieID, ',');
+        getline(token, title, ',');
+        getline(token, genres, '\n');
+        ++counter;
+        Process_MovieTitle(title, a_map, std::stoi(movieID));
     }
 }
 
