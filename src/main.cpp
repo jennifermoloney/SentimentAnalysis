@@ -11,8 +11,6 @@ int main(int argc, char *argv[])
     MainWindow window;
     window.show();
 
-	HM_separateChaining first_map;
-	ProcessInputReturn("fileData/movies.csv", first_map);
 	return app.exec();
 
 	//HM_separateChaining first_map;
@@ -22,11 +20,6 @@ int main(int argc, char *argv[])
 
 
 	//ParseMovieDataFile("fileData/movies.csv", first_map);
-
-
-	std::string user_input_message;
-	std::getline(std::cin, user_input_message);
-	ProcessInput(user_input_message, first_map);
 
 	//ParseDataFile("file_datita/training.1600000.processed.noemoticon.csv");
 

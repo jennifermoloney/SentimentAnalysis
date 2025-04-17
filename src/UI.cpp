@@ -1,4 +1,5 @@
 #include "UI.h"
+#include "hashmap.h"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -144,7 +145,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     currentAlgorithm = "Open Addressing";
     //change when we add our real data set
-    ParseDataFile("../src/tweetsubset_quoted.csv", m_separateMap);
+    ParseDataFileSC("../src/tweetsubset_quoted.csv", m_separateMap);
+    ParseDataFileLP("../src/tweetsubset_quoted.csv", m_openMap);
 
     setMinimumSize(500, 500);
 }
@@ -152,7 +154,11 @@ MainWindow::MainWindow(QWidget *parent)
 
 float MainWindow::computeScore(const QString &text) {
     std::string tweet = text.toStdString();
-    return ProcessInputReturn(tweet, m_separateMap);
+    if (currentAlgorithm == "Open Addressing") {
+        return ProcessInputReturnLP(tweet, m_openMap);
+    } else {
+        return ProcessInputReturnSC(tweet, m_separateMap);
+    }
 }
 
 void MainWindow::analyzeText()

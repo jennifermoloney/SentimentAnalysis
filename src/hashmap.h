@@ -24,11 +24,19 @@ unsigned long long int HashFunction_one(const string& word);
 class HM_separateChaining {
 public:
     int entries_counter = 0;
+    int collision_count = 0;
     vector<pair<string, int>> a[SIZE_OF_HASH_MAP] = {};
 
     void insert(const unsigned long long int hash_code, const string& word, int score) {
+        if (!a[hash_code].empty()){
+            ++collision_count;
+        }
         a[hash_code].push_back(make_pair(word, score));
         entries_counter++;
+    }
+
+    int get_collision_count() const {
+        return collision_count;
     }
 
     int search(const string& word) {
@@ -53,12 +61,14 @@ public:
 class HM_linearProbing {
 public:
     int entries_counter = 0;
+    int collision_count = 0;
     vector<pair<string, int>> map[SIZE_OF_HASH_MAP] = {};
 
     void insert(const unsigned long long int hash_code, const string& word, int score) {
         int idx = hash_code;
         int start = idx;
         while (!map[idx].empty()) {
+            ++collision_count;
             if (map[idx][0].first == word) {
                 map[idx][0].second = score;
                 return;
@@ -73,7 +83,11 @@ public:
         entries_counter++;
     }
 
-    void search(const string& word) {
+    int get_collision_count() const {
+        return collision_count;
+    }
+
+    int search(const string& word) {
         unsigned long long int hash_code = HashFunction_one(word);
         int idx = hash_code;
         int start = idx;
@@ -81,19 +95,27 @@ public:
             if (map[idx][0].first == word) {
                 cout << "The score of the word " << word
                           << " is: " << map[idx][0].second << endl;
-                return;
+                return map[idx][0].second;
             }
             idx = (idx + 1) % SIZE_OF_HASH_MAP;
             if (idx == start) break;
         }
         cout << "The word: " << word << " is not present in the map" << endl;
+        return -1;
     }
 };
 
-void ProcessTweet_one(const string& tweet_, HM_separateChaining& a_map, const int score);
-void ParseDataFile(const string& fileName, HM_separateChaining& a_map);
-void ProcessInput(const string& tweet_, HM_separateChaining& a_map);
-float ProcessInputReturn(const string &tweet_, HM_separateChaining &a_map);
+void ProcessTweet_oneSC(const string& tweet_, HM_separateChaining& a_map, const int score);
+void ProcessTweet_oneLP(const string& tweet_, HM_linearProbing& a_map, const int score);
+
+void ParseDataFileSC(const string& fileName, HM_separateChaining& a_map);
+void ParseDataFileLP(const string& fileName, HM_linearProbing& a_map);
+
+void ProcessInputSC(const string& tweet_, HM_separateChaining& a_map);
+void ProcessInputLP(const string& tweet_, HM_linearProbing& a_map);
+
+float ProcessInputReturnSC(const string &tweet_, HM_separateChaining &a_map);
+float ProcessInputReturnLP(const string &tweet_, HM_linearProbing &a_map);
 
 void ParseMovieDataFile(const string& fileName, HM_separateChaining &a_map);
 void Process_MovieTitle(const string& tweet_, HM_separateChaining& a_map, const int movieID);
