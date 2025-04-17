@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     window.show();
 
 	HM_separateChaining first_map;
-	ParseMovieDataFile("fileData/movies.csv", first_map);
+	ProcessInputReturn("fileData/movies.csv", first_map);
 	return app.exec();
 
 	//HM_separateChaining first_map;
