@@ -178,19 +178,38 @@ void MainWindow::analyzeText()
     sentimentExplanationLabel->setText(QString("Your text is %1").arg(explanation));
     sentimentExplanationLabel->setVisible(true);
 
-    if (currentAlgorithm == "Open Addressing")
-        metricsLabel->setText("Metrics!");
-    else
-        metricsGroup->setVisible(true);
+    updateMetricsDisplay();
 }
 
 
 void MainWindow::selectOpenAddressing()
 {
     currentAlgorithm = "Open Addressing";
+    if (metricsGroup->isVisible())
+        updateMetricsDisplay();
 }
 
 void MainWindow::selectSeparateChaining()
 {
     currentAlgorithm = "Separate Chaining";
+    if (metricsGroup->isVisible())
+        updateMetricsDisplay();
+}
+
+void MainWindow::updateMetricsDisplay() {
+    if (currentAlgorithm == "Open Addressing") {
+        metricsLabel->setText(
+                "Open Addressing Metrics:\n"
+                "- Time complexity for insertion & search: O(1)\n"
+                "- Space Complexity for insertion & search: O(1)\n "
+        );
+    }
+    else {
+        metricsLabel->setText(
+                "Separate Chaining Metrics:\n"
+                "- Time complexity for search: O(n)\n"
+                "- Space complexity: ___"
+        );
+    }
+    metricsGroup->setVisible(true);
 }

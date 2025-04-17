@@ -45,6 +45,7 @@ private:
     HM_separateChaining m_separateMap;
     HM_linearProbing  m_openMap;
     float computeScore(const QString &text);
+    void updateMetricsDisplay();
 };
 
 
