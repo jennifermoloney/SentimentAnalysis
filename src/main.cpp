@@ -13,10 +13,8 @@ int main(int argc, char *argv[])
 
 	return app.exec();
 
-	//HM_separateChaining first_map;
-	// just testing with this "datita.csv" file since it is WAY smaller than the actual dataset
-	// feel free to add a new .csv file into \cmake-build-debug\fileData folder to test a different input
-	// ParseDataFile("fileData/datita.csv", first_map);
+	// HM_separateChaining first_map;
+	// ParseDataFileSC("fileData/datita.csv", first_map);
 
 
 	//ParseMovieDataFile("fileData/movies.csv", first_map);

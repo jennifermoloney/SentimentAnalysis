@@ -10,12 +10,12 @@
 #include <cmath>
 
 
-unsigned long long int HashFunction_one(const std::string& word) {
+unsigned long long int HashFunction_one(const std::string& word, const int curr_size_map_) {
     unsigned long long int value = 0;
     for (size_t i = 0; i < word.size(); i++) {
         value = value * 131 + static_cast<int>(word[i]);
     }
-    return value % SIZE_OF_HASH_MAP;
+    return value % curr_size_map_;
 }
 
 // ProcessTweet_one: Processes a tweet and splits it into words, inserting
@@ -24,7 +24,7 @@ void ProcessTweet_oneSC(const std::string& tweet_, HM_separateChaining& a_map, c
     std::string word;
     std::istringstream message_string(tweet_);
     while (getline(message_string, word, ' ')) {
-        unsigned long long int hash_code = HashFunction_one(word);
+        unsigned long long int hash_code = HashFunction_one(word, a_map.curr_size_of_hash_map);
         a_map.insert(hash_code, word, score);
     }
 }
@@ -32,7 +32,7 @@ void ProcessTweet_oneLP(const std::string& tweet_, HM_linearProbing& a_map, cons
     std::string word;
     std::istringstream message_string(tweet_);
     while (getline(message_string, word, ' ')) {
-        unsigned long long int hash_code = HashFunction_one(word);
+        unsigned long long int hash_code = HashFunction_one(word, a_map.curr_size_of_hash_map);
         a_map.insert(hash_code, word, score);
     }
 }

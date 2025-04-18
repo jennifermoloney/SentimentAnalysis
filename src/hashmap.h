@@ -16,23 +16,34 @@ using namespace std;
 
 //Can modify max load
 constexpr float MAX_LOAD = 0.80;
-constexpr int SIZE_OF_HASH_MAP = 100;
+constexpr int BASE_SIZE_OF_HASH_MAP = 100;
 
-unsigned long long int HashFunction_one(const string& word);
+unsigned long long int HashFunction_one(const std::string& word, const int curr_size_map_);
 
 
 class HM_separateChaining {
 public:
     int entries_counter = 0;
     int collision_count = 0;
-    vector<pair<string, int>> a[SIZE_OF_HASH_MAP] = {};
+    int curr_size_of_hash_map = BASE_SIZE_OF_HASH_MAP;
+    std::vector<std::vector<std::pair<std::string, int>>> map;
+
+    HM_separateChaining() {
+        for (int i = 0; i < BASE_SIZE_OF_HASH_MAP; i++) {
+            std::vector<std::pair<std::string, int>> temp;
+            map.push_back(temp);
+        }
+    }
 
     void insert(const unsigned long long int hash_code, const string& word, int score) {
-        if (!a[hash_code].empty()){
+        if (!map[hash_code].empty()){
             ++collision_count;
         }
-        a[hash_code].push_back(make_pair(word, score));
+        map[hash_code].push_back(make_pair(word, score));
         entries_counter++;
+        if (entries_counter/curr_size_of_hash_map > MAX_LOAD) {
+            std::cout << "the vector needs to be resized" << std::endl;
+        }
     }
 
     int get_collision_count() const {
@@ -40,14 +51,14 @@ public:
     }
 
     int search(const string& word) {
-        unsigned long long int hash_code = HashFunction_one(word);
+        unsigned long long int hash_code = HashFunction_one(word, curr_size_of_hash_map);
         bool found = false;
-        for (size_t i = 0; i < a[hash_code].size(); i++) {
-            if (a[hash_code][i].first == word) {
-                cout << "The score of the word " << a[hash_code][i].first
-                          << " is: " << a[hash_code][i].second << endl;
+        for (size_t i = 0; i < map[hash_code].size(); i++) {
+            if (map[hash_code][i].first == word) {
+                cout << "The score of the word " << map[hash_code][i].first
+                          << " is: " << map[hash_code][i].second << endl;
                 found = true;
-                return a[hash_code][i].second;
+                return map[hash_code][i].second;
             }
         }
         //if (!found) {
@@ -62,7 +73,8 @@ class HM_linearProbing {
 public:
     int entries_counter = 0;
     int collision_count = 0;
-    vector<pair<string, int>> map[SIZE_OF_HASH_MAP] = {};
+    vector<pair<string, int>> map[BASE_SIZE_OF_HASH_MAP] = {};
+    int curr_size_of_hash_map = BASE_SIZE_OF_HASH_MAP;
 
     void insert(const unsigned long long int hash_code, const string& word, int score) {
         int idx = hash_code;
@@ -73,7 +85,7 @@ public:
                 map[idx][0].second = score;
                 return;
             }
-            idx = (idx + 1) % SIZE_OF_HASH_MAP;
+            idx = (idx + 1) % BASE_SIZE_OF_HASH_MAP;
             if (idx == start) {
                 cerr << "Hash table is full." << endl;
                 return;
@@ -88,7 +100,7 @@ public:
     }
 
     int search(const string& word) {
-        unsigned long long int hash_code = HashFunction_one(word);
+        unsigned long long int hash_code = HashFunction_one(word, curr_size_of_hash_map);
         int idx = hash_code;
         int start = idx;
         while (!map[idx].empty()) {
@@ -97,7 +109,7 @@ public:
                           << " is: " << map[idx][0].second << endl;
                 return map[idx][0].second;
             }
-            idx = (idx + 1) % SIZE_OF_HASH_MAP;
+            idx = (idx + 1) % BASE_SIZE_OF_HASH_MAP;
             if (idx == start) break;
         }
         cout << "The word: " << word << " is not present in the map" << endl;

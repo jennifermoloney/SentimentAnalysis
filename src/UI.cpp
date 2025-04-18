@@ -10,6 +10,7 @@
 #include <QGroupBox>
 #include <QSpacerItem>
 #include <QSizePolicy>
+#include <iomanip>
 
 MainWindow::MainWindow(QWidget *parent)
         : QMainWindow(parent)
