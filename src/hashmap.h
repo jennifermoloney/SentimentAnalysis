@@ -35,6 +35,32 @@ public:
         }
     }
 
+    void MapResize(std::vector<std::vector<std::pair<std::string, int>>>& ptr_) {
+        int prev_size = curr_size_of_hash_map;
+        curr_size_of_hash_map = curr_size_of_hash_map * 2;
+        //std::vector<std::pair<std::string, int>>* new_map = new std::vector<std::pair<std::string, int>>[curr_size_of_hash_map];
+        std::vector<std::vector<std::pair<std::string, int>>> new_map;
+        for (int i = 0; i < curr_size_of_hash_map; i++) {
+            std::vector<std::pair<std::string, int>> temp;
+            new_map.push_back(temp);
+        }
+        collision_count = 0;
+        entries_counter = 0;
+        for (int r = 0; r < prev_size; r++) {
+            for (int c = 0; c < map[r].size(); c++) {
+                unsigned long long int hash_code = HashFunction_one(map[r][c].first, curr_size_of_hash_map);
+                if (!new_map[hash_code].empty()){
+                    ++collision_count;
+                }
+                new_map[hash_code].push_back(make_pair(map[r][c].first, map[r][c].second));
+                entries_counter++;
+            }
+        }
+        //delete[] map;
+        map = new_map;
+
+    }
+
     void insert(const unsigned long long int hash_code, const string& word, int score) {
         if (!map[hash_code].empty()){
             ++collision_count;
