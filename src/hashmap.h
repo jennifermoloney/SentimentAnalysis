@@ -100,16 +100,49 @@ class HM_linearProbing {
 public:
     int entries_counter = 0;
     int collision_count = 0;
-    vector<pair<string, int>> map[BASE_SIZE_OF_HASH_MAP] = {};
     int curr_size_of_hash_map = BASE_SIZE_OF_HASH_MAP;
+    // vector<pair<string, int>> map[BASE_SIZE_OF_HASH_MAP] = {};
+    std::vector<std::pair<std::string, int>> map;
+
+    HM_linearProbing() {
+        for (int i = 0; i < BASE_SIZE_OF_HASH_MAP; i++) {
+            std::pair<std::string, int> temp = {"", -1};;
+            map.push_back(temp);
+        }
+    }
+
+    void MapResize(std::vector<std::pair<std::string, int>>& ptr_) {
+        int prev_size = curr_size_of_hash_map;
+        curr_size_of_hash_map = curr_size_of_hash_map * 2;
+        //std::vector<std::pair<std::string, int>>* new_map = new std::vector<std::pair<std::string, int>>[curr_size_of_hash_map];
+        std::vector<std::pair<std::string, int>> new_map;
+
+        for (int i = 0; i < curr_size_of_hash_map; i++) {
+            std::pair<std::string, int> temp = {"", -1};
+            new_map.push_back(temp);
+        }
+
+        collision_count = 0;
+        entries_counter = 0;
+        for (int r = 0; r < prev_size; r++) {
+            unsigned long long int hash_code = HashFunction_one(map[r].first, curr_size_of_hash_map);
+            if (new_map[hash_code].second != -1) {
+                ++collision_count;
+            }
+            new_map[hash_code] = make_pair(map[r].first, map[r].second);
+            entries_counter++;
+        }
+        //delete[] map;
+        map = new_map;
+    }
 
     void insert(const unsigned long long int hash_code, const string& word, int score) {
         int idx = hash_code;
         int start = idx;
-        while (!map[idx].empty()) {
+        while (map[idx].second != -1) {
             ++collision_count;
-            if (map[idx][0].first == word) {
-                map[idx][0].second = score;
+            if (map[idx].first == word) {
+                map[idx].second = score;
                 return;
             }
             idx = (idx + 1) % BASE_SIZE_OF_HASH_MAP;
@@ -117,8 +150,13 @@ public:
                 cerr << "Hash table is full." << endl;
                 return;
             }
+
+            if (entries_counter/curr_size_of_hash_map > MAX_LOAD) {
+                std::cout << "the vector needs to be resized" << std::endl;
+                MapResize(map);
+            }
         }
-        map[idx].push_back(make_pair(word, score));
+        map[idx]= make_pair(word, score);
         entries_counter++;
     }
 
@@ -130,11 +168,11 @@ public:
         unsigned long long int hash_code = HashFunction_one(word, curr_size_of_hash_map);
         int idx = hash_code;
         int start = idx;
-        while (!map[idx].empty()) {
-            if (map[idx][0].first == word) {
+        while (map[idx].second != -1) {
+            if (map[idx].first == word) {
                 cout << "The score of the word " << word
-                          << " is: " << map[idx][0].second << endl;
-                return map[idx][0].second;
+                          << " is: " << map[idx].second << endl;
+                return map[idx].second;
             }
             idx = (idx + 1) % BASE_SIZE_OF_HASH_MAP;
             if (idx == start) break;
