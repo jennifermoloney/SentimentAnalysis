@@ -2,16 +2,13 @@
 #include "hashmap.h"
 
 #include <QVBoxLayout>
-#include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
-#include <QTextEdit>
 #include <QGroupBox>
-#include <QSpacerItem>
-#include <QSizePolicy>
 #include <iomanip>
 #include <QString>
+#include <chrono>
 
 MainWindow::MainWindow(QWidget *parent)
         : QMainWindow(parent)
@@ -146,9 +143,17 @@ MainWindow::MainWindow(QWidget *parent)
     connect(separateChainingButton, &QPushButton::clicked, this, &MainWindow::selectSeparateChaining);
 
     currentAlgorithm = "Open Addressing";
-    //change when we add our real data set
+
+    auto startTimeSC =std::chrono::high_resolution_clock::now();
     ParseDataFileSC("../src/tweetsubset_quoted.csv", m_separateMap);
+    auto endTimeSC = std::chrono::high_resolution_clock::now();
+    insertionTimeSC = duration_cast<std::chrono::milliseconds>(endTimeSC - startTimeSC).count();
+
+    auto startTimeLP =std::chrono::high_resolution_clock::now();
     ParseDataFileLP("../src/tweetsubset_quoted.csv", m_openMap);
+    auto endTimeLP = std::chrono::high_resolution_clock::now();
+    insertionTimeLP = duration_cast<std::chrono::milliseconds>(endTimeLP - startTimeLP).count();
+
 
     setMinimumSize(500, 500);
 }
@@ -157,9 +162,17 @@ MainWindow::MainWindow(QWidget *parent)
 float MainWindow::computeScore(const QString &text) {
     std::string tweet = text.toStdString();
     if (currentAlgorithm == "Open Addressing") {
-        return ProcessInputReturnLP(tweet, m_openMap);
+        auto startTimeLP = std::chrono::high_resolution_clock::now();
+        float result = ProcessInputReturnLP(tweet, m_openMap);
+        auto endTimeLP = std::chrono::high_resolution_clock::now();
+        searchTimeLP = std::chrono::duration_cast<std::chrono::microseconds>(endTimeLP - startTimeLP).count();
+        return result;
     } else {
-        return ProcessInputReturnSC(tweet, m_separateMap);
+        auto startTimeSC = std::chrono::high_resolution_clock::now();
+        float result = ProcessInputReturnSC(tweet, m_separateMap);
+        auto endTimeSC = std::chrono::high_resolution_clock::now();
+        searchTimeSC = std::chrono::duration_cast<std::chrono::microseconds>(endTimeSC - startTimeSC).count();
+        return result;
     }
 }
 
@@ -209,21 +222,29 @@ void MainWindow::updateMetricsDisplay() {
 
     if (currentAlgorithm == "Open Addressing") {
         int collisions = m_openMap.get_collision_count();
+        int resizes = m_openMap.get_resize_count();
         metricsText = QString(
                 "Open Addressing Metrics:\n"
                 "- Time complexity for insertion & search: O(1)\n"
                 "- Space Complexity for insertion & search: O(1)\n "
-                "- Collisions: %1"
-        ).arg(collisions);
+                "- Collisions: %1\n"
+                "- Resizes: %2\n"
+                "- Insertion Time %3 ms\n"
+                "- Search Time %4 µs"
+        ).arg(collisions).arg(resizes).arg(insertionTimeLP).arg(searchTimeLP);
     }
     else {
         int collisions = m_separateMap.get_collision_count();
+        int resizes = m_separateMap.get_resize_count();
         metricsText = QString(
                 "Separate Chaining Metrics:\n"
                 "- Time complexity for search: O(n)\n"
                 "- Space complexity: ___\n"
-                "- Collisions: %1"
-        ).arg(collisions);
+                "- Collisions: %1\n"
+                "- Resizes: %2\n"
+                "- Insertion Time: %3 ms\n"
+                "- Search Time: %4 µs"
+        ).arg(collisions).arg(resizes).arg(insertionTimeSC).arg(searchTimeSC);
     }
     metricsLabel->setText(metricsText);
     metricsGroup->setVisible(true);

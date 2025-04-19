@@ -44,8 +44,13 @@ private:
     QString currentAlgorithm;
     HM_separateChaining m_separateMap;
     HM_linearProbing  m_openMap;
+    long long insertionTimeLP = 0;
+    long long insertionTimeSC= 0;
+    long long searchTimeLP = 0;
+    long long searchTimeSC = 0;
     float computeScore(const QString &text);
     void updateMetricsDisplay();
+
 };
 
 

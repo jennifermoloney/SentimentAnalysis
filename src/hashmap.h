@@ -12,6 +12,7 @@
 #include <iostream>
 #include <sstream>
 #include <utility>
+
 using namespace std;
 
 //Can modify max load
@@ -25,6 +26,7 @@ class HM_separateChaining {
 public:
     int entries_counter = 0;
     int collision_count = 0;
+    int resize_count = 0;
     int curr_size_of_hash_map = BASE_SIZE_OF_HASH_MAP;
     std::vector<std::vector<std::pair<std::string, int>>> map;
 
@@ -36,6 +38,7 @@ public:
     }
 
     void MapResize(std::vector<std::vector<std::pair<std::string, int>>>& ptr_) {
+        resize_count++;
         int prev_size = curr_size_of_hash_map;
         curr_size_of_hash_map = curr_size_of_hash_map * 2;
         //std::vector<std::pair<std::string, int>>* new_map = new std::vector<std::pair<std::string, int>>[curr_size_of_hash_map];
@@ -77,6 +80,10 @@ public:
         return collision_count;
     }
 
+    int get_resize_count() const {
+        return resize_count;
+    }
+
     int search(const string& word) {
         unsigned long long int hash_code = HashFunction_one(word, curr_size_of_hash_map);
         bool found = false;
@@ -100,6 +107,7 @@ class HM_linearProbing {
 public:
     int entries_counter = 0;
     int collision_count = 0;
+    int resize_count = 0;
     int curr_size_of_hash_map = BASE_SIZE_OF_HASH_MAP;
     // vector<pair<string, int>> map[BASE_SIZE_OF_HASH_MAP] = {};
     std::vector<std::pair<std::string, int>> map;
@@ -112,6 +120,7 @@ public:
     }
 
     void MapResize(std::vector<std::pair<std::string, int>>& ptr_) {
+        resize_count++;
         int prev_size = curr_size_of_hash_map;
         curr_size_of_hash_map = curr_size_of_hash_map * 2;
         //std::vector<std::pair<std::string, int>>* new_map = new std::vector<std::pair<std::string, int>>[curr_size_of_hash_map];
@@ -162,6 +171,10 @@ public:
 
     int get_collision_count() {
         return collision_count;
+    }
+
+    int get_resize_count() const {
+        return resize_count;
     }
 
     int search(const string& word) {
