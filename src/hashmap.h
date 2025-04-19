@@ -69,6 +69,7 @@ public:
         entries_counter++;
         if (entries_counter/curr_size_of_hash_map > MAX_LOAD) {
             std::cout << "the vector needs to be resized" << std::endl;
+            MapResize(map);
         }
     }
 
