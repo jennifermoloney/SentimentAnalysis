@@ -73,7 +73,7 @@ public:
         }
     }
 
-    int get_collision_count() const {
+    int get_collision_count() {
         return collision_count;
     }
 
@@ -137,6 +137,11 @@ public:
     }
 
     void insert(const unsigned long long int hash_code, const string& word, int score) {
+        if ((float)entries_counter / curr_size_of_hash_map > MAX_LOAD) {
+            std::cout << "the vector needs to be resized" << std::endl;
+            MapResize(map);
+        }
+
         int idx = hash_code;
         int start = idx;
         while (map[idx].second != -1) {
@@ -145,22 +150,17 @@ public:
                 map[idx].second = score;
                 return;
             }
-            idx = (idx + 1) % BASE_SIZE_OF_HASH_MAP;
+            idx = (idx + 1) % curr_size_of_hash_map;
             if (idx == start) {
-                cerr << "Hash table is full." << endl;
+                std::cerr << "Hash table is full." << std::endl;
                 return;
             }
-
-            if (entries_counter/curr_size_of_hash_map > MAX_LOAD) {
-                std::cout << "the vector needs to be resized" << std::endl;
-                MapResize(map);
-            }
         }
-        map[idx]= make_pair(word, score);
+        map[idx] = make_pair(word, score);
         entries_counter++;
     }
 
-    int get_collision_count() const {
+    int get_collision_count() {
         return collision_count;
     }
 
@@ -174,7 +174,7 @@ public:
                           << " is: " << map[idx].second << endl;
                 return map[idx].second;
             }
-            idx = (idx + 1) % BASE_SIZE_OF_HASH_MAP;
+            idx = (idx + 1) % curr_size_of_hash_map;
             if (idx == start) break;
         }
         cout << "The word: " << word << " is not present in the map" << endl;

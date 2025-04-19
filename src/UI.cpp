@@ -11,6 +11,7 @@
 #include <QSpacerItem>
 #include <QSizePolicy>
 #include <iomanip>
+#include <QString>
 
 MainWindow::MainWindow(QWidget *parent)
         : QMainWindow(parent)
@@ -204,19 +205,26 @@ void MainWindow::selectSeparateChaining()
 }
 
 void MainWindow::updateMetricsDisplay() {
+    QString metricsText;
+
     if (currentAlgorithm == "Open Addressing") {
-        metricsLabel->setText(
+        int collisions = m_openMap.get_collision_count();
+        metricsText = QString(
                 "Open Addressing Metrics:\n"
                 "- Time complexity for insertion & search: O(1)\n"
                 "- Space Complexity for insertion & search: O(1)\n "
-        );
+                "- Collisions: %1"
+        ).arg(collisions);
     }
     else {
-        metricsLabel->setText(
+        int collisions = m_separateMap.get_collision_count();
+        metricsText = QString(
                 "Separate Chaining Metrics:\n"
                 "- Time complexity for search: O(n)\n"
-                "- Space complexity: ___"
-        );
+                "- Space complexity: ___\n"
+                "- Collisions: %1"
+        ).arg(collisions);
     }
+    metricsLabel->setText(metricsText);
     metricsGroup->setVisible(true);
 }
