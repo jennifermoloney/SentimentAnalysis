@@ -50,9 +50,6 @@ private:
     long long searchTimeSC = 0;
     float computeScore(const QString &text);
     void updateMetricsDisplay();
-
 };
-
-
 
 #endif //SENTIMENTANALYSIS_UI_H

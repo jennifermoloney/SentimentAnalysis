@@ -137,7 +137,6 @@ MainWindow::MainWindow(QWidget *parent)
     bottomLayout->addStretch();
     mainLayout->addLayout(bottomLayout);
 
-    //Doesnt really do anything right now
     connect(goButton, &QPushButton::clicked, this, &MainWindow::analyzeText);
     connect(openAddressingButton, &QPushButton::clicked, this, &MainWindow::selectOpenAddressing);
     connect(separateChainingButton, &QPushButton::clicked, this, &MainWindow::selectSeparateChaining);
@@ -147,15 +146,15 @@ MainWindow::MainWindow(QWidget *parent)
     auto startTimeSC =std::chrono::high_resolution_clock::now();
     ParseDataFileSC("../src/tweetsubset_quoted.csv", m_separateMap);
     auto endTimeSC = std::chrono::high_resolution_clock::now();
-    insertionTimeSC = duration_cast<std::chrono::milliseconds>(endTimeSC - startTimeSC).count();
+    insertionTimeSC = std::chrono::duration_cast<std::chrono::milliseconds>(endTimeSC - startTimeSC).count();
 
     auto startTimeLP =std::chrono::high_resolution_clock::now();
     ParseDataFileLP("../src/tweetsubset_quoted.csv", m_openMap);
     auto endTimeLP = std::chrono::high_resolution_clock::now();
-    insertionTimeLP = duration_cast<std::chrono::milliseconds>(endTimeLP - startTimeLP).count();
+    insertionTimeLP = std::chrono::duration_cast<std::chrono::milliseconds>(endTimeLP - startTimeLP).count();
 
 
-    setMinimumSize(500, 500);
+    setMinimumSize(750, 500);
 }
 
 
@@ -196,7 +195,7 @@ void MainWindow::analyzeText()
     }
     sentimentResultLabel->setText(QString("The sentiment of your message is: %1").arg(rawScoreStr));
     sentimentResultLabel->setVisible(true);
-    sentimentExplanationLabel->setText(QString("Your text is %1").arg(explanation));
+    sentimentExplanationLabel->setText(QString("Your text comes across as %1").arg(explanation));
     sentimentExplanationLabel->setVisible(true);
 
     updateMetricsDisplay();
@@ -225,8 +224,8 @@ void MainWindow::updateMetricsDisplay() {
         int resizes = m_openMap.get_resize_count();
         metricsText = QString(
                 "Open Addressing Metrics:\n"
-                "- Time complexity for insertion & search: O(1)\n"
-                "- Space Complexity for insertion & search: O(1)\n "
+                "- Avg. case time complexity for insertion & search: O(1)\n"
+                "- Space Complexity: O(n)\n "
                 "- Collisions: %1\n"
                 "- Resizes: %2\n"
                 "- Insertion Time %3 ms\n"
@@ -238,8 +237,9 @@ void MainWindow::updateMetricsDisplay() {
         int resizes = m_separateMap.get_resize_count();
         metricsText = QString(
                 "Separate Chaining Metrics:\n"
-                "- Time complexity for search: O(n)\n"
-                "- Space complexity: ___\n"
+                "- Avg case time complexity for insertion & search: O(1)\n"
+                "- Space complexity: O(n + m) n = num of elements\n"
+                "and m = num of buckets\n"
                 "- Collisions: %1\n"
                 "- Resizes: %2\n"
                 "- Insertion Time: %3 ms\n"

@@ -19,7 +19,7 @@ unsigned long long int HashFunction_one(const std::string& word, const int curr_
 }
 
 // ProcessTweet_one: Processes a tweet and splits it into words, inserting
-// each word (with the tweet's score) into the provided separate chaining map.
+// each word (with the tweet's score) into the provided map (SC or LP).
 void ProcessTweet_oneSC(const std::string& tweet_, HM_separateChaining& a_map, const int score) {
     std::string word;
     std::istringstream message_string(tweet_);
@@ -111,39 +111,6 @@ void ParseDataFileLP(const std::string& fileName, HM_linearProbing& a_map) {
         ++counter;
         ProcessTweet_oneLP(tweet, a_map, std::stoi(score));
     }
-}
-
-
-void ProcessInputSC(const string &tweet_, HM_separateChaining &a_map) {
-    int inputTweetScore = 0;
-    int valid_word_counter = 0;
-    std::istringstream token(tweet_);
-    std::string single_word;
-    while (getline(token, single_word, ' ')) {
-        int temp = a_map.search(single_word);
-        if (temp != -1) {
-            inputTweetScore += temp;
-            ++valid_word_counter;
-        }
-    }
-    float final_result = (float) inputTweetScore / (float)valid_word_counter;
-    std::cout << "The score of your tweet is: " << final_result << std::endl;
-}
-
-void ProcessInputLP(const string &tweet_, HM_linearProbing &a_map) {
-    int inputTweetScore = 0;
-    int valid_word_counter = 0;
-    std::istringstream token(tweet_);
-    std::string single_word;
-    while (getline(token, single_word, ' ')) {
-        int temp = a_map.search(single_word);
-        if (temp != -1) {
-            inputTweetScore += temp;
-            ++valid_word_counter;
-        }
-    }
-    float final_result = (float) inputTweetScore / (float)valid_word_counter;
-    std::cout << "The score of your tweet is: " << final_result << std::endl;
 }
 
 // Same function as above- just returns a float instead of being void

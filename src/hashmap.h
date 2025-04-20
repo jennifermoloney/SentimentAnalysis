@@ -114,7 +114,7 @@ public:
 
     HM_linearProbing() {
         for (int i = 0; i < BASE_SIZE_OF_HASH_MAP; i++) {
-            std::pair<std::string, int> temp = {"", -1};;
+            std::pair<std::string, int> temp = {"", -1};
             map.push_back(temp);
         }
     }
@@ -201,16 +201,7 @@ void ProcessTweet_oneLP(const string& tweet_, HM_linearProbing& a_map, const int
 void ParseDataFileSC(const string& fileName, HM_separateChaining& a_map);
 void ParseDataFileLP(const string& fileName, HM_linearProbing& a_map);
 
-void ProcessInputSC(const string& tweet_, HM_separateChaining& a_map);
-void ProcessInputLP(const string& tweet_, HM_linearProbing& a_map);
-
 float ProcessInputReturnSC(const string &tweet_, HM_separateChaining &a_map);
 float ProcessInputReturnLP(const string &tweet_, HM_linearProbing &a_map);
-
-void ParseMovieDataFile(const string& fileName, HM_separateChaining &a_map);
-void Process_MovieTitle(const string& tweet_, HM_separateChaining& a_map, const int movieID);
-
-
-
 
 #endif // HASHMAP_H

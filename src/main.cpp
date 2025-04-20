@@ -3,7 +3,6 @@
 //
 #include <QApplication>
 #include "UI.h"
-#include "hashmap.h"
 
 int main(int argc, char *argv[])
 {
@@ -12,13 +11,4 @@ int main(int argc, char *argv[])
     window.show();
 
 	return app.exec();
-
-	// HM_separateChaining first_map;
-	// ParseDataFileSC("fileData/datita.csv", first_map);
-
-
-	//ParseMovieDataFile("fileData/movies.csv", first_map);
-
-	//ParseDataFile("file_datita/training.1600000.processed.noemoticon.csv");
-
 }
